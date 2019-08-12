@@ -1,0 +1,45 @@
+{
+  "name": "Sample Scheduler RabbitMQ",
+  "website": "https://www.hypertrack.com/",
+  "success_url": "/",
+  "description": "Sample RabbitMQ scheduler implementation for Placeline application",
+  "addons": ["papertrail:choklad", "cloudamqp:lemur"],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "free"
+    },
+    "scheduler": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "env": {
+    "GMAPS_KEY": {
+      "description": "Your Google Maps Key from https://developers.google.com/maps/documentation/javascript/get-api-key",
+      "value": ""
+    },
+    "SERVER_URL": {
+      "description": "Your backend server URL (without '/' at the end), for instance from https://github.com/hypertrack/sample-backend-nodejs deployment",
+      "value": ""
+    }
+  },
+  "repository": "https://github.com/hypertrack/sample-scheduler-rabbitmq",
+  "logo": "https://dashboard.hypertrack.com/assets/hypertrack-bw.svg",
+  "keywords": [
+    "sample",
+    "hypertrack",
+    "placeline",
+    "scheduler",
+    "rabbitmq",
+    "message-broker",
+    "ampq",
+    "messaging",
+    "heroku"
+  ]
+}
