@@ -4,11 +4,16 @@
   "success_url": "/",
   "description": "Sample RabbitMQ scheduler implementation for Placeline application",
   "addons": ["papertrail:choklad", "cloudamqp:lemur"],
-  "buildpacks": [
-    {
-      "url": "heroku/nodejs"
+  "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "free"
+    },
+    "scheduler": {
+      "quantity": 1,
+      "size": "free"
     }
-  ],
+  },
   "env": {
     "HT_ACCOUNT_ID": {
       "description": "Your HyperTrack AccountId from https://dashboard.hypertrack.com/setup",
