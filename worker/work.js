@@ -1,7 +1,7 @@
 require("dotenv").config();
 const amqp = require("amqp-connection-manager");
 
-const WORKER_QUEUE = process.env.CLOUDAMQP_QUEUE;
+const WORKER_QUEUE = "hypertrack-queue";
 
 const tripHelpers = require("../common/trips");
 let {

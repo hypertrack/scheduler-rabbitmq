@@ -1,7 +1,7 @@
 // every day at midnight in production, every minute everywhere else
 const cronTime =
   process.env.NODE_ENV === "production" ? "0 0 * * *" : "* * * * *";
-const queue = process.env.CLOUDAMQP_QUEUE;
+const queue = "hypertrack-queue";
 
 module.exports = [
   {

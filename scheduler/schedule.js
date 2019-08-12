@@ -2,7 +2,7 @@ require("dotenv").config();
 const CronJob = require("cron").CronJob;
 const amqp = require("amqp-connection-manager");
 
-const WORKER_QUEUE = process.env.CLOUDAMQP_QUEUE;
+const WORKER_QUEUE = "hypertrack-queue";
 
 const JOBS = [
   {

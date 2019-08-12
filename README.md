@@ -18,9 +18,8 @@ Before getting started with the scheduler, please ensure you have ...
 - the HyperTrack SDK in your application ([iOS](https://github.com/hypertrack/quickstart-ios), [Android](https://github.com/hypertrack/quickstart-android), or [React Native](https://github.com/hypertrack/quickstart-react-native)) or use our sample app to send location data ([iOS](https://github.com/hypertrack/live-app-ios) or [Android](https://github.com/hypertrack/live-app-android))
 - Set the following environmental varibales in an `.env` file or in on your host (e.g. Heroku)
   - `process.env.CLOUDAMQP_URL` needs to resolve to an accessible server
-  - `process.env.CLOUDAMQP_TOPIC` needs to be a topic that the scheduler and worker both can subscribe to
   - `process.env.HT_ACCOUNT_ID` needs to be your HyperTrack account ID (from [the dashboard](https://dashboard.hypertrack.com/setup))
-  - `process.env.HT_SECRET_KEY` needs to be your HyperTrack secret key ((from [the dashboard](https://dashboard.hypertrack.com/setup))
+  - `process.env.HT_SECRET_KEY` needs to be your HyperTrack secret key (from [the dashboard](https://dashboard.hypertrack.com/setup))
   - `process.env.NODE_ENV` is set to `production` to avoid test execution on a minute basis
 
 ## Deploying to Heroku

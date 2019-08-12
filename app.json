@@ -20,12 +20,12 @@
     }
   },
   "env": {
-    "GMAPS_KEY": {
-      "description": "Your Google Maps Key from https://developers.google.com/maps/documentation/javascript/get-api-key",
+    "HT_ACCOUNT_ID": {
+      "description": "Your HyperTrack AccountId from https://dashboard.hypertrack.com/setup",
       "value": ""
     },
-    "SERVER_URL": {
-      "description": "Your backend server URL (without '/' at the end), for instance from https://github.com/hypertrack/sample-backend-nodejs deployment",
+    "HT_SECRET_KEY": {
+      "description": "Your HyperTrack SecretKey from https://dashboard.hypertrack.com/setup",
       "value": ""
     }
   },
