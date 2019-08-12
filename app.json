@@ -5,6 +5,10 @@
   "description": "Sample RabbitMQ scheduler implementation for Placeline application",
   "addons": ["papertrail:choklad", "cloudamqp:lemur"],
   "formation": {
+    "web": {
+      "quantity": 0,
+      "size": "free"
+    },
     "worker": {
       "quantity": 1,
       "size": "free"
