@@ -3,14 +3,14 @@ const amqp = require("amqp-connection-manager");
 
 const WORKER_QUEUE = "hypertrack-queue";
 
-const tripHelpers = require("../common/trips");
+const tripHelpers = require("../hypertrack/requests/trips");
 let {
   completeDailyTripsForallDevices,
   createTripsForAllDevices,
   updateAllTrips
 } = tripHelpers;
 
-const deviceHelpers = require("../common/devices");
+const deviceHelpers = require("../hypertrack/requests/devices");
 let { updateAllDevices } = deviceHelpers;
 
 // Create a new connection manager from AMQP

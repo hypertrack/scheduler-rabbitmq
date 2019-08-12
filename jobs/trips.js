@@ -14,18 +14,18 @@ module.exports = [
     repeat: 1
   },
   {
-    name: "Daily Trip DB Sync",
+    name: "Daily Trip Creation",
     message: {
-      taskName: "syncTrips",
+      taskName: "createTrips",
       queue
     },
     cronTime,
     repeat: 1
   },
   {
-    name: "Daily Trip Creation",
+    name: "Daily Trip DB Sync",
     message: {
-      taskName: "createTrips",
+      taskName: "syncTrips",
       queue
     },
     cronTime,

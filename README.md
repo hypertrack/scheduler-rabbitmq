@@ -31,14 +31,14 @@ This project is set up to be deployed to Heroku within seconds.
 ## Starting the scheduler locally
 
 In the `/scheduler` folder, you will find a `schedule.js` file. Please review the constants and change according to your preferences. You can start the scheduler using node:
-`node /scheduler/schedule.js`
+`node scheduler/schedule.js`
 
 > Note: If deployed outside of production, the scheduler will add tasks to the queue every minute. Keep in mind that the scheduler will add tasks indepdent of execution. The tasks will "pile up" if not executed right away.
 
 ## Starting the worker locally
 
 In the `/worker` folder, you will find a `work.js` file. Please review the constants and change according to your preferences. You can start the scheduler using node:
-`node /worker/work.js`
+`node worker/work.js`
 
 > Note: If deployed outside of production, the worker will seize tasks from the queue every minute. Keep in mind that the worker will seize ALL tasks in the queue at once.
 

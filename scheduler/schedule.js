@@ -4,45 +4,7 @@ const amqp = require("amqp-connection-manager");
 
 const WORKER_QUEUE = "hypertrack-queue";
 
-const JOBS = [
-  {
-    name: "Daily Trip Completion",
-    message: {
-      taskName: "completeTrips",
-      queue: WORKER_QUEUE
-    },
-    cronTime: process.env.NODE_ENV === "production" ? "0 0 * * *" : "* * * * *",
-    repeat: 1
-  },
-  {
-    name: "Daily Trip DB Sync",
-    message: {
-      taskName: "syncTrips",
-      queue: WORKER_QUEUE
-    },
-    cronTime: process.env.NODE_ENV === "production" ? "0 0 * * *" : "* * * * *",
-    repeat: 1
-  },
-  {
-    name: "Daily Device DB Sync",
-    message: {
-      taskName: "syncDevices",
-      queue: WORKER_QUEUE
-    },
-    cronTime: process.env.NODE_ENV === "production" ? "0 0 * * *" : "* * * * *",
-    repeat: 1
-  },
-  {
-    name: "Daily Trip Creation",
-    message: {
-      taskName: "createTrips",
-      queue: WORKER_QUEUE
-    },
-    cronTime:
-      process.env.NODE_ENV === "production" ? "10 0 * * *" : "* * * * *",
-    repeat: 1
-  }
-];
+const JOBS = [...require("../jobs/devices"), ...require("../jobs/trips")];
 
 // Create a new connection manager from AMQP
 var connection = amqp.connect([process.env.CLOUDAMQP_URL]);
