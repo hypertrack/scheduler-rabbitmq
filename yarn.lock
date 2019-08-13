@@ -19,6 +19,13 @@ amqp-connection-manager@^3.0.0:
   dependencies:
     promise-breaker "^5.0.0"
 
+amqp@^0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/amqp/-/amqp-0.2.7.tgz#738cfc45fd9c99260b45d5fafc32ed000841e1b1"
+  integrity sha1-c4z8Rf2cmSYLRdX6/DLtAAhB4bE=
+  dependencies:
+    lodash "^4.0.0"
+
 amqplib@^0.5.5:
   version "0.5.5"
   resolved "https://registry.yarnpkg.com/amqplib/-/amqplib-0.5.5.tgz#698f0cb577e0591954a90572fcb3b8998a76fd40"
@@ -287,7 +294,7 @@ kareem@2.3.0:
   resolved "https://registry.yarnpkg.com/kareem/-/kareem-2.3.0.tgz#ef33c42e9024dce511eeaf440cd684f3af1fc769"
   integrity sha512-6hHxsp9e6zQU8nXsP+02HGWXwTkOEw6IROhF2ZA28cYbUk4eJ6QbtZvdqZOdD9YPKghG3apk5eOCvs+tLl3lRg==
 
-lodash@^4.17.11:
+lodash@^4.0.0, lodash@^4.17.11:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
