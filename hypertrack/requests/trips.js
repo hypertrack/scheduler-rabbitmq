@@ -34,7 +34,7 @@ function createTripsForAllDevices() {
     };
 
     request(options, (error, response, body) => {
-      if (!error && response.statusCode == 200) {
+      if (!error && response.statusCode === 200) {
         const devices = JSON.parse(body);
 
         devices.forEach(device => {
@@ -75,17 +75,21 @@ function createTripsForAllDevices() {
           };
 
           // create new trips for all devices
-          request(options, (error, response, body) => {
-            if (!error && response.statusCode == 201) {
-              const trip = body;
+          request(options, (err, resp, bd) => {
+            if (!err && resp.statusCode === 201) {
+              const trip = bd;
               console.log(
                 `Trip created for device_id '${device.device_id}': ${
                   trip.trip_id
                 }`
               );
+            } else {
+              console.log(resp.body, err);
             }
           });
         });
+      } else {
+        console.log(response.body, error);
       }
     });
   });
@@ -105,8 +109,18 @@ function completeDailyTripsForallDevices() {
   };
 
   request(options, (error, response, body) => {
-    if (!error && response.statusCode == 200) {
-      const trips = JSON.parse(body);
+    if (!error && response.statusCode === 200) {
+      let trips = [];
+
+      try {
+        trips = JSON.parse(body);
+      } catch (e) {
+        console.log(
+          `[HyperTrack] - No active trips found for account_id '${
+            process.env.HT_ACCOUNT_ID
+          }'`
+        );
+      }
 
       trips.forEach(trip => {
         // complete only daily scheduled trips
@@ -119,17 +133,21 @@ function completeDailyTripsForallDevices() {
             }
           };
 
-          request(options, (error, response, body) => {
-            if (!error && response.statusCode == 202) {
+          request(options, (err, resp, bd) => {
+            if (!err && resp.statusCode === 202) {
               console.log(
                 `Trip completed for device_id '${trip.device_id}': ${
                   trip.trip_id
                 }`
               );
+            } else {
+              console.log(resp.body, err);
             }
           });
         }
       });
+    } else {
+      console.log(response.body, error);
     }
   });
 }
@@ -148,7 +166,7 @@ function updateAllTrips() {
   };
 
   request(options, (error, response, body) => {
-    if (!error && response.statusCode == 200) {
+    if (!error && response.statusCode === 200) {
       const trips = JSON.parse(body);
       let bulkOps = [];
 
@@ -168,8 +186,20 @@ function updateAllTrips() {
       });
 
       if (bulkOps.length > 0) {
-        tripCollection.bulkWrite(bulkOps);
+        try {
+          tripCollection.bulkWrite(bulkOps).then(res => {
+            console.log(
+              `[Mongoose] - Updating all trips: ${res.modifiedCount} updated, ${
+                res.insertedCount
+              } added`
+            );
+          });
+        } catch (e) {
+          console.log(`[Mongoose] - Error updating all trips`);
+        }
       }
+    } else {
+      console.log(response.body, error);
     }
   });
 }

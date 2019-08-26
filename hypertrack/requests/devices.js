@@ -35,7 +35,17 @@ function updateAllDevices() {
       });
 
       if (bulkOps.length > 0) {
-        deviceCollection.bulkWrite(bulkOps);
+        try {
+          deviceCollection.bulkWrite(bulkOps).then(res => {
+            console.log(
+              `[Mongoose] - Updating all devices: ${
+                res.modifiedCount
+              } updated, ${res.insertedCount} added`
+            );
+          });
+        } catch (e) {
+          console.log(`[Mongoose] - Error updating all devices`);
+        }
       }
     }
   });
