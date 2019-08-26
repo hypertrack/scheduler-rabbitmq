@@ -1,6 +1,9 @@
 require("dotenv").config();
-const amqp = require("amqp-connection-manager");
 
+const mongoose = require("mongoose");
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
+
+const amqp = require("amqp-connection-manager");
 const WORKER_QUEUE = "hypertrack-queue";
 
 const tripHelpers = require("../hypertrack/requests/trips");

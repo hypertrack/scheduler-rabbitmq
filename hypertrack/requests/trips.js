@@ -2,54 +2,92 @@ var request = require("request");
 var _ = require("lodash");
 require("dotenv").config();
 
+function getPlacesById(places, device_id) {
+  let output = [];
+
+  for (let i = 0; i < places.length; i++) {
+    const place = places[i];
+
+    if (place.device_id === device_id) {
+      output.push(place);
+    }
+  }
+
+  return output;
+}
+
 function createTripsForAllDevices() {
-  // get all devices using HyperTrack API
-  const base64auth = Buffer.from(
-    `${process.env.HT_ACCOUNT_ID}:${process.env.HT_SECRET_KEY}`
-  ).toString("base64");
-  const auth = `Basic ${base64auth}`;
-  let options = {
-    url: "https://v3.api.hypertrack.com/devices",
-    headers: {
-      Authorization: auth
-    }
-  };
+  // get all device places using Mongoose
+  var devicePlaceCollection = require("../models/device-place.model");
 
-  request(options, (error, response, body) => {
-    if (!error && response.statusCode == 200) {
-      const devices = JSON.parse(body);
+  devicePlaceCollection.find({}, function(err, devicePlaces) {
+    // get all devices using HyperTrack API
+    const base64auth = Buffer.from(
+      `${process.env.HT_ACCOUNT_ID}:${process.env.HT_SECRET_KEY}`
+    ).toString("base64");
+    const auth = `Basic ${base64auth}`;
+    let options = {
+      url: "https://v3.api.hypertrack.com/devices",
+      headers: {
+        Authorization: auth
+      }
+    };
 
-      devices.forEach(device => {
-        let tripBody = {
-          device_id: device.device_id,
-          metadata: {
-            scheduled_trip: true
+    request(options, (error, response, body) => {
+      if (!error && response.statusCode == 200) {
+        const devices = JSON.parse(body);
+
+        devices.forEach(device => {
+          let tripBody = {
+            device_id: device.device_id,
+            metadata: {
+              scheduled_trip: true
+            },
+            geofences: []
+          };
+
+          // add places as geofences if defined in the sample app
+          const places = getPlacesById(devicePlaces, device.device_id);
+
+          for (let p = 0; p < places.length; p++) {
+            const place = places[p];
+
+            tripBody.geofences.push({
+              geometry: {
+                type: "Point",
+                coordinates: [place.coordinates.lng, place.coordinates.lat]
+              },
+              metadata: {
+                place_label: place.label,
+                place_address: place.address
+              }
+            });
           }
-        };
 
-        options = {
-          url: "https://v3.api.hypertrack.com/trips",
-          method: "POST",
-          headers: {
-            Authorization: auth,
-            "Content-Type": "application/json"
-          },
-          json: tripBody
-        };
+          options = {
+            url: "https://v3.api.hypertrack.com/trips",
+            method: "POST",
+            headers: {
+              Authorization: auth,
+              "Content-Type": "application/json"
+            },
+            json: tripBody
+          };
 
-        // create new trips for all devices
-        request(options, (error, response, body) => {
-          if (!error && response.statusCode == 201) {
-            const trip = body;
-            console.log(
-              `Trip created for device_id '${device.device_id}': ${
-                trip.trip_id
-              }`
-            );
-          }
+          // create new trips for all devices
+          request(options, (error, response, body) => {
+            if (!error && response.statusCode == 201) {
+              const trip = body;
+              console.log(
+                `Trip created for device_id '${device.device_id}': ${
+                  trip.trip_id
+                }`
+              );
+            }
+          });
         });
-      });
-    }
+      }
+    });
   });
 }
 

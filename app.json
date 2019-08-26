@@ -26,6 +26,10 @@
     "HT_SECRET_KEY": {
       "description": "Your HyperTrack SecretKey from https://dashboard.hypertrack.com/setup",
       "value": ""
+    },
+    "MONGODB_URI": {
+      "description": "Your MongoDB connection string (could be from the sample server)",
+      "value": "mongodb://"
     }
   },
   "repository": "https://github.com/hypertrack/sample-scheduler-rabbitmq",
