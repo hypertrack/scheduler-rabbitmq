@@ -14,7 +14,7 @@ module.exports = [
       taskName: "completeTrips",
       queue
     },
-    midnight,
+    cronTime: midnight,
     repeat: 1
   },
   {
@@ -23,7 +23,7 @@ module.exports = [
       taskName: "createTrips",
       queue
     },
-    twoAfter,
+    cronTime: twoAfter,
     repeat: 1
   },
   {
@@ -32,7 +32,7 @@ module.exports = [
       taskName: "syncTrips",
       queue
     },
-    fourAfter,
+    cronTime: fourAfter,
     repeat: 1
   }
 ];

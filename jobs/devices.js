@@ -10,7 +10,7 @@ module.exports = [
       taskName: "syncDevices",
       queue
     },
-    midnight,
+    cronTime: midnight,
     repeat: 1
   }
 ];
