@@ -1,6 +1,10 @@
 // every day at midnight in production, every minute everywhere else
-const cronTime =
+const midnight =
   process.env.NODE_ENV === "production" ? "0 0 * * *" : "* * * * *";
+const twoAfter =
+  process.env.NODE_ENV === "production" ? "2 0 * * *" : "* * * * *";
+const fourAfter =
+  process.env.NODE_ENV === "production" ? "4 0 * * *" : "* * * * *";
 const queue = "hypertrack-queue";
 
 module.exports = [
@@ -10,7 +14,7 @@ module.exports = [
       taskName: "completeTrips",
       queue
     },
-    cronTime,
+    midnight,
     repeat: 1
   },
   {
@@ -19,7 +23,7 @@ module.exports = [
       taskName: "createTrips",
       queue
     },
-    cronTime,
+    twoAfter,
     repeat: 1
   },
   {
@@ -28,7 +32,7 @@ module.exports = [
       taskName: "syncTrips",
       queue
     },
-    cronTime,
+    fourAfter,
     repeat: 1
   }
 ];

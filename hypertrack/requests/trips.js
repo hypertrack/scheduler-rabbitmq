@@ -58,8 +58,7 @@ function createTripsForAllDevices() {
                 coordinates: [place.coordinates.lng, place.coordinates.lat]
               },
               metadata: {
-                place_label: place.label,
-                place_address: place.address
+                label: place.label
               }
             });
           }

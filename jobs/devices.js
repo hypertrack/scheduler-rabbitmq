@@ -1,5 +1,5 @@
 // every day at midnight in production, every minute everywhere else
-const cronTime =
+const midnight =
   process.env.NODE_ENV === "production" ? "0 0 * * *" : "* * * * *";
 const queue = "hypertrack-queue";
 
@@ -10,7 +10,7 @@ module.exports = [
       taskName: "syncDevices",
       queue
     },
-    cronTime,
+    midnight,
     repeat: 1
   }
 ];
