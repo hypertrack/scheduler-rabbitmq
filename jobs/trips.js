@@ -9,24 +9,6 @@ const queue = "hypertrack-queue";
 
 module.exports = [
   {
-    name: "Daily Trip Completion",
-    message: {
-      taskName: "completeTrips",
-      queue
-    },
-    cronTime: midnight,
-    repeat: 1
-  },
-  {
-    name: "Daily Trip Creation",
-    message: {
-      taskName: "createTrips",
-      queue
-    },
-    cronTime: twoAfter,
-    repeat: 1
-  },
-  {
     name: "Daily Trip DB Sync",
     message: {
       taskName: "syncTrips",

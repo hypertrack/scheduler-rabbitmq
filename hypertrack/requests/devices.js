@@ -1,5 +1,6 @@
-var request = require("request");
 require("dotenv").config();
+const request = require("request");
+const _ = require("lodash");
 
 function updateAllDevices() {
   // get all devices using HyperTrack API

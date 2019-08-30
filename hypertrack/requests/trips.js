@@ -1,6 +1,6 @@
-var request = require("request");
-var _ = require("lodash");
 require("dotenv").config();
+const request = require("request");
+const _ = require("lodash");
 
 function getPlacesById(places, device_id) {
   let output = [];
