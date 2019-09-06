@@ -32,7 +32,7 @@
       "value": "mongodb://"
     }
   },
-  "repository": "https://github.com/hypertrack/sample-scheduler-rabbitmq",
+  "repository": "https://github.com/hypertrack/scheduler-rabbitmq",
   "logo": "https://dashboard.hypertrack.com/assets/hypertrack-bw.svg",
   "keywords": [
     "sample",

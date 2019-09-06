@@ -26,7 +26,7 @@ Before getting started with the scheduler, please ensure you have ...
 
 This project is set up to be deployed to Heroku within seconds.
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/hypertrack/sample-scheduler-rabbitmq)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/hypertrack/scheduler-rabbitmq)
 
 ## Starting the scheduler locally
 
