@@ -144,7 +144,7 @@ async function completeDailyTripsForallDevices() {
                       `Trip completed for device_id '${trip.device_id}': ${trip.trip_id}`
                     );
                   } else {
-                    console.log(resp.body, err);
+                    console.log(bd, err);
                   }
                 }
               );
