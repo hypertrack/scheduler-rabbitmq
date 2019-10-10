@@ -121,14 +121,7 @@ async function completeDailyTripsForallDevices() {
     await rp(options)
       .then(function(body) {
         tripResponse = JSON.parse(body);
-
-        try {
-          trips = JSON.parse(body);
-        } catch (e) {
-          console.log(
-            `[HyperTrack] - No active trips found for account_id '${process.env.HT_ACCOUNT_ID}'`
-          );
-        }
+        trips = tripResponse.data;
 
         // set up pagination
         options.url = _.get(tripResponse, "links.next", null);
