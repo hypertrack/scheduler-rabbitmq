@@ -133,29 +133,31 @@ async function completeDailyTripsForallDevices() {
         // set up pagination
         options.url = _.get(tripResponse, "links.next", null);
 
-        trips.forEach(trip => {
-          // complete only daily scheduled trips
-          if (_.get(trip, "metadata.scheduled_trip", false)) {
-            request(
-              {
-                url: `https://v3.api.hypertrack.com/trips/${trip.trip_id}/complete`,
-                method: "POST",
-                headers: {
-                  Authorization: auth
+        if (trips && Array.isArray(trips) && trips.length > 0) {
+          trips.forEach(trip => {
+            // complete only daily scheduled trips
+            if (_.get(trip, "metadata.scheduled_trip", false)) {
+              request(
+                {
+                  url: `https://v3.api.hypertrack.com/trips/${trip.trip_id}/complete`,
+                  method: "POST",
+                  headers: {
+                    Authorization: auth
+                  }
+                },
+                (err, resp, bd) => {
+                  if (!err && resp.statusCode === 202) {
+                    console.log(
+                      `Trip completed for device_id '${trip.device_id}': ${trip.trip_id}`
+                    );
+                  } else {
+                    console.log(resp.body, err);
+                  }
                 }
-              },
-              (err, resp, bd) => {
-                if (!err && resp.statusCode === 202) {
-                  console.log(
-                    `Trip completed for device_id '${trip.device_id}': ${trip.trip_id}`
-                  );
-                } else {
-                  console.log(resp.body, err);
-                }
-              }
-            );
-          }
-        });
+              );
+            }
+          });
+        }
       })
       .catch(function(err) {
         console.log("Error getting all trips: ", err);
