@@ -16,7 +16,7 @@ module.exports = [
     },
     cronTime: midnight,
     repeat: 1
-  } /*,
+  },
   {
     name: "Daily Trip Creation",
     message: {
@@ -35,5 +35,4 @@ module.exports = [
     cronTime: fourAfter,
     repeat: 1
   }
-  */
 ];
