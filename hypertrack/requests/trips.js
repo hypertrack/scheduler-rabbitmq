@@ -1,6 +1,8 @@
 require("dotenv").config();
 const request = require("request");
+const rp = require("request-promise");
 const _ = require("lodash");
+const tripCollection = require("../models/trip.model");
 
 function getPlacesById(places, device_id) {
   let output = [];
@@ -84,9 +86,7 @@ function createTripsForAllDevices() {
             if (!err && resp.statusCode === 201) {
               const trip = bd;
               console.log(
-                `Trip created for device_id '${device.device_id}': ${
-                  trip.trip_id
-                }`
+                `Trip created for device_id '${device.device_id}': ${trip.trip_id}`
               );
             } else {
               console.log(resp.body, err);
@@ -100,7 +100,7 @@ function createTripsForAllDevices() {
   });
 }
 
-function completeDailyTripsForallDevices() {
+async function completeDailyTripsForallDevices() {
   // get all active trips using HyperTrack API
   const base64auth = Buffer.from(
     `${process.env.HT_ACCOUNT_ID}:${process.env.HT_SECRET_KEY}`
@@ -112,52 +112,58 @@ function completeDailyTripsForallDevices() {
       Authorization: auth
     }
   };
+  let trips = [];
+  let tripResponse;
 
-  request(options, (error, response, body) => {
-    if (!error && response.statusCode === 200) {
-      let trips = [];
+  while (options.url !== null) {
+    console.log("Pagination through all trips with URL: ", options.url);
 
-      try {
-        trips = JSON.parse(body);
-      } catch (e) {
-        console.log(
-          `[HyperTrack] - No active trips found for account_id '${
-            process.env.HT_ACCOUNT_ID
-          }'`
-        );
-      }
+    await rp(options)
+      .then(function(body) {
+        tripResponse = JSON.parse(body);
 
-      trips.forEach(trip => {
-        // complete only daily scheduled trips
-        if (_.get(trip, "metadata.scheduled_trip", false)) {
-          options = {
-            url: `https://v3.api.hypertrack.com/trips/${trip.trip_id}/complete`,
-            method: "POST",
-            headers: {
-              Authorization: auth
-            }
-          };
-
-          request(options, (err, resp, bd) => {
-            if (!err && resp.statusCode === 202) {
-              console.log(
-                `Trip completed for device_id '${trip.device_id}': ${
-                  trip.trip_id
-                }`
-              );
-            } else {
-              console.log(resp.body, err);
-            }
-          });
+        try {
+          trips = JSON.parse(body);
+        } catch (e) {
+          console.log(
+            `[HyperTrack] - No active trips found for account_id '${process.env.HT_ACCOUNT_ID}'`
+          );
         }
+
+        // set up pagination
+        options.url = _.get(tripResponse, "links.next", null);
+
+        trips.forEach(trip => {
+          // complete only daily scheduled trips
+          if (_.get(trip, "metadata.scheduled_trip", false)) {
+            request(
+              {
+                url: `https://v3.api.hypertrack.com/trips/${trip.trip_id}/complete`,
+                method: "POST",
+                headers: {
+                  Authorization: auth
+                }
+              },
+              (err, resp, bd) => {
+                if (!err && resp.statusCode === 202) {
+                  console.log(
+                    `Trip completed for device_id '${trip.device_id}': ${trip.trip_id}`
+                  );
+                } else {
+                  console.log(resp.body, err);
+                }
+              }
+            );
+          }
+        });
+      })
+      .catch(function(err) {
+        console.log("Error getting all trips: ", err);
       });
-    } else {
-      console.log(response.body, error);
-    }
-  });
+  }
 }
 
-function updateAllTrips() {
+async function updateAllTrips() {
   // get all trips (completed and active) using HyperTrack API
   const base64auth = Buffer.from(
     `${process.env.HT_ACCOUNT_ID}:${process.env.HT_SECRET_KEY}`
@@ -169,44 +175,52 @@ function updateAllTrips() {
       Authorization: auth
     }
   };
+  let trips = [];
+  let bulkOps = [];
+  let tripResponse;
 
-  request(options, (error, response, body) => {
-    if (!error && response.statusCode === 200) {
-      const trips = JSON.parse(body);
-      let bulkOps = [];
+  while (options.url !== null) {
+    console.log("Pagination through all trips with URL: ", options.url);
 
-      // update all trips in mongoDB
-      var tripCollection = require("../models/trip.model");
+    await rp(options)
+      .then(function(body) {
+        tripResponse = JSON.parse(body);
+        trips.push(tripResponse.data);
 
-      trips.forEach(trip => {
-        let upsertDoc = {
-          updateOne: {
-            filter: { trip_id: trip["trip_id"] },
-            update: trip,
-            upsert: true,
-            setDefaultsOnInsert: true
-          }
-        };
-        bulkOps.push(upsertDoc);
-      });
+        // set up pagination
+        options.url = _.get(tripResponse, "links.next", null);
 
-      if (bulkOps.length > 0) {
-        try {
-          tripCollection.bulkWrite(bulkOps).then(res => {
-            console.log(
-              `[Mongoose] - Updating all trips: ${res.modifiedCount} updated, ${
-                res.insertedCount
-              } added`
-            );
+        // update all trips in mongoDB
+        if (tripResponse.data && Array.isArray(tripResponse.data)) {
+          tripResponse.data.forEach(trip => {
+            let upsertDoc = {
+              updateOne: {
+                filter: { trip_id: trip["trip_id"] },
+                update: trip,
+                upsert: true,
+                setDefaultsOnInsert: true
+              }
+            };
+            bulkOps.push(upsertDoc);
           });
-        } catch (e) {
-          console.log(`[Mongoose] - Error updating all trips`);
         }
-      }
-    } else {
-      console.log(response.body, error);
+      })
+      .catch(function(err) {
+        console.log("Error getting all trips: ", err);
+      });
+  }
+
+  if (bulkOps.length > 0) {
+    try {
+      tripCollection.bulkWrite(bulkOps).then(res => {
+        console.log(
+          `[Mongoose] - Updating all trips: ${res.modifiedCount} updated, ${res.insertedCount} added`
+        );
+      });
+    } catch (e) {
+      console.log(`[Mongoose] - Error updating all trips`);
     }
-  });
+  }
 }
 
 module.exports = {
