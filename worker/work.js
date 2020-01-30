@@ -23,7 +23,7 @@ let {
 } = tripHelpers;
 
 const deviceHelpers = require("../hypertrack/requests/devices");
-let { updateAllDevices } = deviceHelpers;
+let { updateAllDevices, deleteOldDevices } = deviceHelpers;
 
 // Create a new connection manager from AMQP
 var connection = amqp.connect([process.env.CLOUDAMQP_URL]);
@@ -88,6 +88,10 @@ function onMessage(data) {
 
     case "syncTrips":
       updateAllTrips();
+      break;
+
+    case "deleteOldDevices":
+      deleteOldDevices();
       break;
 
     case "syncDevices":

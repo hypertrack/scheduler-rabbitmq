@@ -31,6 +31,7 @@
     "cron": "^1.7.1",
     "dotenv": "^8.0.0",
     "lodash": "^4.17.11",
+    "moment": "^2.24.0",
     "mongoose": "^5.7.5",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"

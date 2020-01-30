@@ -68,9 +68,7 @@ const sendMessage = message => {
     })
     .catch(err => {
       console.error(
-        `[AMQP] - Message '${
-          message.taskName
-        }' to queue => ${queue} <= was rejected!`,
+        `[AMQP] - Message '${message.taskName}' to queue => ${queue} <= was rejected!`,
         err.stack
       );
       senderChannelWrapper.close();
