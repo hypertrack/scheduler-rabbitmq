@@ -25,7 +25,7 @@ module.exports = [
     },
     cronTime: twoAfter,
     repeat: 1
-  },
+  } /*,
   {
     name: "Daily Trip DB Sync",
     message: {
@@ -34,5 +34,5 @@ module.exports = [
     },
     cronTime: fourAfter,
     repeat: 1
-  }
+  }*/
 ];
