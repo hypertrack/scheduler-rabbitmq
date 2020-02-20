@@ -19,7 +19,6 @@ function deleteOldDevices() {
   request(options, (error, response, body) => {
     if (!error && response.statusCode == 200) {
       const devices = JSON.parse(body);
-      var deviceCollection = require("../models/device.model");
       let oldDevices = [];
 
       devices.forEach(device => {
@@ -58,7 +57,6 @@ function deleteOldDevices() {
       });
 
       console.log(`****** DELETED ${oldDevices.length} DEVICES DURING CLEANUP`);
-      deviceCollection.deleteMany({ device_id: oldDevices });
     }
   });
 }
