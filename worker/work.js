@@ -1,29 +1,14 @@
 require("dotenv").config();
 
-// set up MongoDB connection
-const mongoose = require("mongoose");
-console.log("[Mongoose] - Connecting....");
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
-mongoose.connection.on(
-  "error",
-  console.error.bind(console, "[Mongoose] - Error! ")
-);
-mongoose.connection.once("open", function callback() {
-  console.log("[Mongoose] - Connected!");
-});
-
 const amqp = require("amqp-connection-manager");
 const WORKER_QUEUE = "hypertrack-queue";
 
-const tripHelpers = require("../hypertrack/requests/trips");
-let {
-  completeDailyTripsForallDevices,
-  createTripsForAllDevices,
-  updateAllTrips
-} = tripHelpers;
-
 const deviceHelpers = require("../hypertrack/requests/devices");
-let { updateAllDevices, deleteOldDevices } = deviceHelpers;
+let {
+  stopTrackingAllDevices,
+  startTrackingAllDevices,
+  deleteOldDevices
+} = deviceHelpers;
 
 // Create a new connection manager from AMQP
 var connection = amqp.connect([process.env.CLOUDAMQP_URL]);
@@ -78,24 +63,16 @@ function onMessage(data) {
   }
 
   switch (message.taskName) {
-    case "completeTrips":
-      completeDailyTripsForallDevices();
+    case "stopTracking":
+      stopTrackingAllDevices();
       break;
 
-    case "createTrips":
-      createTripsForAllDevices();
-      break;
-
-    case "syncTrips":
-      updateAllTrips();
+    case "startTracking":
+      startTrackingAllDevices();
       break;
 
     case "deleteOldDevices":
       deleteOldDevices();
-      break;
-
-    case "syncDevices":
-      updateAllDevices();
       break;
 
     default:

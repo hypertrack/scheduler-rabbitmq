@@ -1,6 +1,6 @@
-# Placeline Sample Scheduler
+# Sample Tracking Scheduler
 
-Sample RabbitMQ scheduler implementation for Placeline application
+Sample RabbitMQ scheduler implementation for scheduled device tracking
 
 # Setup
 

@@ -16,9 +16,18 @@ module.exports = [
     repeat: 1
   },
   {
-    name: "Daily Device DB Sync",
+    name: "Daily Tracking Stop",
     message: {
-      taskName: "syncDevices",
+      taskName: "stopTracking",
+      queue
+    },
+    cronTime: midnight,
+    repeat: 1
+  },
+  {
+    name: "Daily Tracking Start",
+    message: {
+      taskName: "startTracking",
       queue
     },
     cronTime: twoAfter,

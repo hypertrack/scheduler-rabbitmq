@@ -4,7 +4,7 @@ const amqp = require("amqp-connection-manager");
 
 const WORKER_QUEUE = "hypertrack-queue";
 
-const JOBS = [...require("../jobs/devices"), ...require("../jobs/trips")];
+const JOBS = [...require("../jobs/devices")];
 
 // Create a new connection manager from AMQP
 var connection = amqp.connect([process.env.CLOUDAMQP_URL]);

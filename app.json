@@ -2,7 +2,7 @@
   "name": "Sample Scheduler RabbitMQ",
   "website": "https://www.hypertrack.com/",
   "success_url": "/",
-  "description": "Sample RabbitMQ scheduler implementation for Placeline application",
+  "description": "Sample RabbitMQ scheduler implementation",
   "addons": ["papertrail:choklad", "cloudamqp:lemur"],
   "formation": {
     "web": {
@@ -26,10 +26,6 @@
     "HT_SECRET_KEY": {
       "description": "Your HyperTrack SecretKey from https://dashboard.hypertrack.com/setup",
       "value": ""
-    },
-    "MONGODB_URI": {
-      "description": "Your MongoDB connection string (could be from the sample server)",
-      "value": "mongodb://"
     }
   },
   "repository": "https://github.com/hypertrack/scheduler-rabbitmq",
@@ -37,7 +33,6 @@
   "keywords": [
     "sample",
     "hypertrack",
-    "placeline",
     "scheduler",
     "rabbitmq",
     "message-broker",

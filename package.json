@@ -1,6 +1,6 @@
 {
   "name": "sample-scheduler-rabbitmq",
-  "description": "Sample RabbitMQ scheduler for Placeline application",
+  "description": "Sample RabbitMQ scheduler",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,6 @@
   "keywords": [
     "sample",
     "hypertrack",
-    "placeline",
     "scheduler",
     "rabbitmq",
     "message-broker",
@@ -32,7 +31,6 @@
     "dotenv": "^8.0.0",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
-    "mongoose": "^5.7.5",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"
   }
