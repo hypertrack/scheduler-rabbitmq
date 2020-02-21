@@ -30,7 +30,8 @@ function deleteOldDevices() {
         // disconnected = 5 days
         if (
           device.device_status.value === "disconnected" &&
-          lastUpdated.isBefore(lastWeek)
+          lastUpdated.isBefore(lastWeek) &&
+          device.device_info.os_name === "iOS"
         ) {
           console.log(
             `****** DELETE DISCONNECTED DEVICE: ${
@@ -44,7 +45,8 @@ function deleteOldDevices() {
         // inactive = 30 days
         if (
           device.device_status.value === "inactive" &&
-          lastUpdated.isBefore(lastTwoWeeks)
+          lastUpdated.isBefore(lastTwoWeeks) &&
+          device.device_info.os_name === "iOS"
         ) {
           console.log(
             `****** DELETE INACTIVE DEVICE: ${
