@@ -20,44 +20,69 @@ function deleteOldDevices() {
     if (!error && response.statusCode == 200) {
       const devices = JSON.parse(body);
       let oldDevices = [];
-
+      let lastlocationUpdated = null;
       devices.forEach(device => {
         // create timestamps for comparison
-        const lastUpdated = moment(device.device_status.data.recorded_at);
+        if (device && device.location && device.location.recorded_at) {
+          lastlocationUpdated = moment(device.location.recorded_at);
+          console.log("Last Location Update timestamp : %s", lastlocationUpdated)
+        }
+        const registeredTime = moment(device.registered_at);
         const lastWeek = moment().subtract(1, "weeks");
         const lastTwoWeeks = moment().subtract(2, "weeks");
+        const lastThreeWeeks = moment().subtract(3, "weeks");
+        console.log("Registered timestamp - %s", registeredTime)
 
         // disconnected = 5 days
-        if (
-          device.device_status.value === "disconnected" &&
-          lastUpdated.isBefore(lastWeek) &&
-          device.device_info.os_name === "iOS"
-        ) {
-          console.log(
-            `****** DELETE DISCONNECTED DEVICE: ${
-              device.name
-            }. Last updated ${lastUpdated.fromNow()}`
-          );
-          deleteDevice(device.device_id);
-          oldDevices.push(device.device_id);
+        if (device.device_status.value === "disconnected") {
+          if (lastlocationUpdated && lastlocationUpdated.isBefore(lastWeek) && device.device_info.os_name === "iOS") {
+            console.log(
+              `****** DELETE DISCONNECTED DEVICE BASED ON LAST LOCATION TIMESTAMP: ${
+                device.name
+              }. Last updated ${lastlocationUpdated.fromNow()}`
+            );
+            deleteDevice(device.device_id);
+            oldDevices.push(device.device_id);
+          } else if (!lastlocationUpdated && registeredTime && registeredTime.isBefore(lastThreeWeeks) && device.device_info.os_name === "iOS"){
+            console.log(
+              `****** DELETE DISCONNECTED DEVICE BASED ON REGISTERED TIMESTAMP: ${
+                device.name
+              }. Registered ${registeredTime.fromNow()}`
+            );
+            deleteDevice(device.device_id);
+            oldDevices.push(device.device_id);
+          }
+          else {
+              console.log("No deletions for DISCONNECTED devices")
+          }
         }
 
         // inactive = 30 days
-        if (
-          device.device_status.value === "inactive" &&
-          lastUpdated.isBefore(lastTwoWeeks) &&
-          device.device_info.os_name === "iOS"
-        ) {
-          console.log(
-            `****** DELETE INACTIVE DEVICE: ${
-              device.name
-            }. Last updated ${lastUpdated.fromNow()}`
-          );
-          deleteDevice(device.device_id);
-          oldDevices.push(device.device_id);
-        }
-      });
 
+        if (device.device_status.value === "inactive") {
+          if (lastlocationUpdated && lastlocationUpdated.isBefore(lastTwoWeeks) && device.device_info.os_name === "iOS") {
+            console.log(
+              `****** DELETE INACTIVE DEVICE BASED ON LAST LOCATION TIMESTAMP: ${
+                device.name
+              }. Last updated ${lastlocationUpdated.fromNow()}`
+            );
+            deleteDevice(device.device_id);
+            oldDevices.push(device.device_id);
+          } else if (!lastlocationUpdated && registeredTime && registeredTime.isBefore(lastThreeWeeks) && device.device_info.os_name === "iOS"){
+            console.log(
+              `****** DELETE INACTIVE DEVICE BASED ON REGISTERED TIMESTAMP: ${
+                device.name
+              }. Registered ${registeredTime.fromNow()}`
+            );
+            deleteDevice(device.device_id);
+            oldDevices.push(device.device_id);
+          }
+          else {
+              console.log("No deletions for INACTIVE devices")
+          }
+        }
+
+      });
       console.log(`****** DELETED ${oldDevices.length} DEVICES DURING CLEANUP`);
     }
   });
