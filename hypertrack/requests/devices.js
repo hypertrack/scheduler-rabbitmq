@@ -30,11 +30,12 @@ function deleteOldDevices() {
         const registeredTime = moment(device.registered_at);
         const lastWeek = moment().subtract(1, "weeks");
         const lastTwoWeeks = moment().subtract(2, "weeks");
+        const twoDays = moment().subtract(2, "days");
         console.log("Registered timestamp - %s", registeredTime)
 
         // disconnected = 5 days
         if (device.device_status.value === "disconnected") {
-          if (lastlocationUpdated && lastlocationUpdated.isBefore(lastWeek) && device.device_info.os_name === "iOS") {
+          if (lastlocationUpdated && lastlocationUpdated.isBefore(lastWeek) && device.device_info && device.device_info.os_name && device.device_info.os_name === "iOS") {
             console.log(
               `****** DELETE DISCONNECTED DEVICE BASED ON LAST LOCATION TIMESTAMP: ${
                 device.name
@@ -42,7 +43,7 @@ function deleteOldDevices() {
             );
             deleteDevice(device.device_id);
             oldDevices.push(device.device_id);
-          } else if (!lastlocationUpdated && registeredTime && registeredTime.isBefore(lastWeek) && device.device_info.os_name === "iOS"){
+          } else if (!lastlocationUpdated && registeredTime && registeredTime.isBefore(twoDays) && device.device_info && device.device_info.os_name && device.device_info.os_name === "iOS"){
             console.log(
               `****** DELETE DISCONNECTED DEVICE BASED ON REGISTERED TIMESTAMP: ${
                 device.name
@@ -59,7 +60,7 @@ function deleteOldDevices() {
         // inactive = 30 days
 
         if (device.device_status.value === "inactive") {
-          if (lastlocationUpdated && lastlocationUpdated.isBefore(lastTwoWeeks) && device.device_info.os_name === "iOS") {
+          if (lastlocationUpdated && lastlocationUpdated.isBefore(lastTwoWeeks) && device.device_info && device.device_info.os_name && device.device_info.os_name === "iOS") {
             console.log(
               `****** DELETE INACTIVE DEVICE BASED ON LAST LOCATION TIMESTAMP: ${
                 device.name
@@ -67,7 +68,7 @@ function deleteOldDevices() {
             );
             deleteDevice(device.device_id);
             oldDevices.push(device.device_id);
-          } else if (!lastlocationUpdated && registeredTime && registeredTime.isBefore(lastWeek) && device.device_info.os_name === "iOS"){
+          } else if (!lastlocationUpdated && registeredTime && registeredTime.isBefore(twoDays) && device.device_info && device.device_info.os_name && device.device_info.os_name === "iOS"){
             console.log(
               `****** DELETE INACTIVE DEVICE BASED ON REGISTERED TIMESTAMP: ${
                 device.name
