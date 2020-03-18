@@ -3,8 +3,6 @@ const midnight =
   process.env.NODE_ENV === "production" ? "0 0 * * *" : "* * * * *";
 const twoAfter =
   process.env.NODE_ENV === "production" ? "2 0 * * *" : "* * * * *";
-const cleanUp =
-  process.env.NODE_ENV === "production" ? "20 4 * * *" : "* * * * *";
 const queue = "hypertrack-queue";
 
 module.exports = [
@@ -14,7 +12,7 @@ module.exports = [
       taskName: "deleteOldDevices",
       queue
     },
-    cronTime: cleanUp,
+    cronTime: midnight,
     repeat: 1
   },
   {
