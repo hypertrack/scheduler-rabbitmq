@@ -33,7 +33,7 @@ function deleteOldDevices() {
         const twoDays = moment().subtract(2, "days");
         console.log("Registered timestamp - %s", registeredTime)
 
-        // disconnected = 5 days
+        // delete disconnected devices based on window period
         if (device.device_status.value === "disconnected") {
           if (lastlocationUpdated && lastlocationUpdated.isBefore(lastWeek) && device.device_info && device.device_info.os_name && device.device_info.os_name === "iOS") {
             console.log(
@@ -57,8 +57,7 @@ function deleteOldDevices() {
           }
         }
 
-        // inactive = 30 days
-
+        // delete inactive devices based on window period
         if (device.device_status.value === "inactive") {
           if (lastlocationUpdated && lastlocationUpdated.isBefore(lastTwoWeeks) && device.device_info && device.device_info.os_name && device.device_info.os_name === "iOS") {
             console.log(
@@ -103,88 +102,6 @@ function deleteDevice(device_id) {
   request.delete(options);
 }
 
-function startTrackingAllDevices() {
-  // get all devices using HyperTrack API
-  const base64auth = Buffer.from(
-    `${process.env.HT_ACCOUNT_ID}:${process.env.HT_SECRET_KEY}`
-  ).toString("base64");
-  const auth = `Basic ${base64auth}`;
-  let options = {
-    url: "https://v3.api.hypertrack.com/devices",
-    headers: {
-      Authorization: auth
-    }
-  };
-
-  request(options, (error, response, body) => {
-    if (!error && response.statusCode == 200) {
-      const devices = JSON.parse(body);
-
-      devices.forEach(device => {
-        console.log(`****** START TRACKING: ${device.device_id}`);
-        startTracking(device.device_id);
-      });
-    }
-  });
-}
-
-function startTracking(device_id) {
-  const base64auth = Buffer.from(
-    `${process.env.HT_ACCOUNT_ID}:${process.env.HT_SECRET_KEY}`
-  ).toString("base64");
-  const auth = `Basic ${base64auth}`;
-  let options = {
-    url: `https://v3.api.hypertrack.com/devices/${device_id}/start`,
-    headers: {
-      Authorization: auth
-    }
-  };
-
-  request.post(options);
-}
-
-function stopTrackingAllDevices() {
-  // get all devices using HyperTrack API
-  const base64auth = Buffer.from(
-    `${process.env.HT_ACCOUNT_ID}:${process.env.HT_SECRET_KEY}`
-  ).toString("base64");
-  const auth = `Basic ${base64auth}`;
-  let options = {
-    url: "https://v3.api.hypertrack.com/devices",
-    headers: {
-      Authorization: auth
-    }
-  };
-
-  request(options, (error, response, body) => {
-    if (!error && response.statusCode == 200) {
-      const devices = JSON.parse(body);
-
-      devices.forEach(device => {
-        console.log(`****** STOP TRACKING: ${device.device_id}`);
-        stopTracking(device.device_id);
-      });
-    }
-  });
-}
-
-function stopTracking(device_id) {
-  const base64auth = Buffer.from(
-    `${process.env.HT_ACCOUNT_ID}:${process.env.HT_SECRET_KEY}`
-  ).toString("base64");
-  const auth = `Basic ${base64auth}`;
-  let options = {
-    url: `https://v3.api.hypertrack.com/devices/${device_id}/stop`,
-    headers: {
-      Authorization: auth
-    }
-  };
-
-  request.post(options);
-}
-
 module.exports = {
-  stopTrackingAllDevices,
-  startTrackingAllDevices,
   deleteOldDevices
 };
