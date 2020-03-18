@@ -5,8 +5,6 @@ const WORKER_QUEUE = "hypertrack-queue";
 
 const deviceHelpers = require("../hypertrack/requests/devices");
 let {
-  stopTrackingAllDevices,
-  startTrackingAllDevices,
   deleteOldDevices
 } = deviceHelpers;
 
@@ -63,18 +61,9 @@ function onMessage(data) {
   }
 
   switch (message.taskName) {
-    case "stopTracking":
-      stopTrackingAllDevices();
-      break;
-
-    case "startTracking":
-      startTrackingAllDevices();
-      break;
-
     case "deleteOldDevices":
       deleteOldDevices();
       break;
-
     default:
       console.error("No task was found with name => " + message.taskName);
   }
