@@ -25,13 +25,11 @@ function deleteOldDevices() {
         // create timestamps for comparison
         if (device && device.location && device.location.recorded_at) {
           lastlocationUpdated = moment(device.location.recorded_at);
-          console.log("Last Location Update timestamp : %s", lastlocationUpdated)
         }
         const registeredTime = moment(device.registered_at);
         const lastWeek = moment().subtract(1, "weeks");
         const lastTwoWeeks = moment().subtract(2, "weeks");
         const twoDays = moment().subtract(2, "days");
-        console.log("Registered timestamp - %s", registeredTime)
 
         // delete disconnected devices based on window period
         if (device.device_status.value === "disconnected") {
@@ -43,7 +41,8 @@ function deleteOldDevices() {
             );
             deleteDevice(device.device_id);
             oldDevices.push(device.device_id);
-          } else if (!lastlocationUpdated && registeredTime && registeredTime.isBefore(twoDays) && device.device_info && device.device_info.os_name && device.device_info.os_name === "iOS"){
+          } else {
+            if (!lastlocationUpdated && registeredTime && registeredTime.isBefore(twoDays) && device.device_info && device.device_info.os_name && device.device_info.os_name === "iOS"){
             console.log(
               `****** DELETE DISCONNECTED DEVICE BASED ON REGISTERED TIMESTAMP: ${
                 device.name
@@ -52,11 +51,8 @@ function deleteOldDevices() {
             deleteDevice(device.device_id);
             oldDevices.push(device.device_id);
           }
-          else {
-              console.log("No deletions for DISCONNECTED devices")
-          }
         }
-
+      }
         // delete inactive devices based on window period
         if (device.device_status.value === "inactive") {
           if (lastlocationUpdated && lastlocationUpdated.isBefore(lastTwoWeeks) && device.device_info && device.device_info.os_name && device.device_info.os_name === "iOS") {
@@ -67,7 +63,8 @@ function deleteOldDevices() {
             );
             deleteDevice(device.device_id);
             oldDevices.push(device.device_id);
-          } else if (!lastlocationUpdated && registeredTime && registeredTime.isBefore(twoDays) && device.device_info && device.device_info.os_name && device.device_info.os_name === "iOS"){
+          } else {
+            if (!lastlocationUpdated && registeredTime && registeredTime.isBefore(twoDays) && device.device_info && device.device_info.os_name && device.device_info.os_name === "iOS"){
             console.log(
               `****** DELETE INACTIVE DEVICE BASED ON REGISTERED TIMESTAMP: ${
                 device.name
@@ -76,10 +73,8 @@ function deleteOldDevices() {
             deleteDevice(device.device_id);
             oldDevices.push(device.device_id);
           }
-          else {
-              console.log("No deletions for INACTIVE devices")
-          }
         }
+      }
 
       });
       console.log(`****** DELETED ${oldDevices.length} DEVICES DURING CLEANUP`);
