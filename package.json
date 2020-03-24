@@ -21,7 +21,7 @@
     "heroku"
   ],
   "engines": {
-    "node": "10.x"
+    "node": ">=10.x"
   },
   "dependencies": {
     "amqp": "^0.2.7",
